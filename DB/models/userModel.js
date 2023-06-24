@@ -1,0 +1,47 @@
+import mongoose from "mongoose";
+const userSchema =new mongoose.Schema({
+    firstName:{
+        type:String,
+        required:true
+    },
+    lastName :{
+        type:String,
+        required:true
+    },
+    userName:{
+        type:String,
+        required:true,
+        unique:true
+    },
+    email :{
+        type:String,
+        required:true,
+        unique:true
+    },
+    password :{
+        type:String,
+        required:true
+    },
+    age:{
+        type:Number,
+        required:true
+    },
+    gander:{
+        type:String,
+        required:true,
+        enum:['male','female']
+    },
+    phone:{
+        type:Number,
+        required:true
+    },
+    posts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'post',
+      }],
+},{
+    timestamps:true
+})
+
+
+export const userModel = mongoose.model('User',userSchema)
