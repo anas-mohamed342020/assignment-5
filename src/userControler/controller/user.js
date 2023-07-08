@@ -30,6 +30,7 @@ export const signUp = async (req, res) => {
 export const signIn = async (req, res) => {
     try {
         const { user, password } = req.body
+        console.log(user);
         const isExist = await userModel.findOne({ $or: [{ userName: user, password }, { email: user, password }, { phone: user, password }] })
         if (!isExist) {
             return res.status(400).json({ message: "Invalid user information" })
