@@ -72,7 +72,7 @@ export const deleteUser = async (req, res) => {
             return res.json({ message: "in-valid user id" })
         }
         else {
-            await postModel.deleteMany({ userId: deleteUser._id })
+            await postModel.deleteMany({ userID: deleteUser._id })
             return res.json({ message: "Done" })
         }
     } catch (err) {
