@@ -1,3 +1,4 @@
+import { postModel } from "../../../DB/models/postModel.js"
 import { userModel } from "../../../DB/models/userModel.js"
 
 
@@ -47,7 +48,7 @@ export const updateUser = async (req, res) => {
 
         const { firstName, lastName, age } = req.body
         const { _id } = req.params
-        const update = await userModel.findByIdAndUpdate(_id, { firstName, lastName, age },{new:true})
+        const update = await userModel.findByIdAndUpdate(_id, { firstName, lastName, age }, { new: true })
         if (!update) {
             return res.json({ message: "in-valid user id" })
         }
@@ -71,6 +72,7 @@ export const deleteUser = async (req, res) => {
             return res.json({ message: "in-valid user id" })
         }
         else {
+            await postModel.deleteMany({ userId: deleteUser._id })
             return res.json({ message: "Done" })
         }
     } catch (err) {
