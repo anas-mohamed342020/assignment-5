@@ -20,7 +20,7 @@ export const signUp = async (req, res) => {
         const newUser = new userModel(req.body)
         await newUser.save()
         console.log("DONE");
-        return res.json({ message: "Done",user:newUser})
+        return res.json({ message: "Done", user: newUser })
     } catch (err) {
         res.status(400).json({ err, stack: err.stack })
     }
@@ -29,12 +29,12 @@ export const signUp = async (req, res) => {
 
 export const signIn = async (req, res) => {
     try {
-        const { userName, email, password, phone } = req.body
-        const isExist = await userModel.findOne({ $or: [{ userName, password }, { email, password }, { phone, password }] })
+        const { user, password } = req.body
+        const isExist = await userModel.findOne({ $or: [{ userName: user, password }, { email: user, password }, { phone: user, password }] })
         if (!isExist) {
             return res.status(400).json({ message: "Invalid user information" })
         }
-        return res.json({ message: `welcome ${isExist.firstName} ${isExist.lastName}`,user:isExist })
+        return res.json({ message: `welcome ${isExist.firstName} ${isExist.lastName}`, user: isExist })
     } catch (err) {
         res.status(400).json(err)
     }
@@ -111,11 +111,11 @@ export const ageBetween = async (req, res) => {
 
 
 export const getAllUsers = async (req, res) => {
-    try{
+    try {
 
         const users = await userModel.find();
         res.json(users);
-    }catch(err){
+    } catch (err) {
         res.status(400).json(err)
     }
 }
@@ -124,15 +124,15 @@ export const getAllUsers = async (req, res) => {
 export const getUserWithNotes = async (req, res) => {
     const { id } = req.params;
     try {
-      const user = await userModel.findById(id).populate('posts');
-      if (!user) {
-        return res.json({ message: "in-valid user id" })
-    }
-      res.json(user);
+        const user = await userModel.findById(id).populate('posts');
+        if (!user) {
+            return res.json({ message: "in-valid user id" })
+        }
+        res.json(user);
     } catch (err) {
-      res.status(400).json({ error: err });
+        res.status(400).json({ error: err });
     }
-  }
+}
 
 
 
