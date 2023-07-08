@@ -52,7 +52,7 @@ export const updateUser = async (req, res) => {
             return res.json({ message: "in-valid user id" })
         }
         else {
-            return res.json({ message: "Done" })
+            return res.json({ message: "Done", user: update })
         }
     } catch (err) {
         res.status(400).json(err)
