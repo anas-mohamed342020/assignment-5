@@ -47,7 +47,7 @@ export const updateUser = async (req, res) => {
 
         const { firstName, lastName, age } = req.body
         const { _id } = req.params
-        const update = await userModel.findByIdAndUpdate(_id, { firstName, lastName, age })
+        const update = await userModel.findByIdAndUpdate(_id, { firstName, lastName, age },{new:true})
         if (!update) {
             return res.json({ message: "in-valid user id" })
         }
