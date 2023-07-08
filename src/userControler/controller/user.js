@@ -10,7 +10,6 @@ export const signUp = async (req, res) => {
         if (isExist?.email == email) {
             return res.status(400).json({ message: "email already exist" })
         }
-        console.log({ isExist });
         if (isExist?.phone == phone) {
             return res.status(400).json({ message: "phone already exist" })
         }
@@ -19,8 +18,8 @@ export const signUp = async (req, res) => {
         }
 
         const newUser = new userModel(req.body)
+        console.log(newUser);
         await newUser.save()
-        console.log("DONE");
         return res.json({ message: "Done", user: newUser })
     } catch (err) {
         res.status(400).json({ err, stack: err.stack })
@@ -31,10 +30,16 @@ export const signUp = async (req, res) => {
 export const signIn = async (req, res) => {
     try {
         const { user, password } = req.body
-        console.log(user);
-        const isExist = await userModel.findOne({ $or: [{ userName: user, password }, { email: user, password }, { phone: user, password }] })
+
+        const isExist = await userModel.findOne({
+            $or: [
+                { userName: user, password },
+                { email: user, password },
+                { phone: user, password }
+            ]
+        })
         if (!isExist) {
-            return res.status(400).json({ message: "Invalid user information" })
+            return res.status(404).json({ message: "Invalid user information" })
         }
         return res.json({ message: `welcome ${isExist.firstName} ${isExist.lastName}`, user: isExist })
     } catch (err) {
@@ -48,7 +53,8 @@ export const updateUser = async (req, res) => {
 
         const { firstName, lastName, age } = req.body
         const { _id } = req.params
-        const update = await userModel.findByIdAndUpdate(_id, { firstName, lastName, age }, { new: true })
+
+        const update = await userModel.findOneAndReplace({ _id }, { firstName, lastName })
         if (!update) {
             return res.json({ message: "in-valid user id" })
         }
@@ -65,7 +71,6 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
 
     try {
-
         const { _id } = req.params
         const deleteUser = await userModel.findByIdAndDelete(_id)
         if (!deleteUser) {
@@ -88,7 +93,7 @@ export const searchUser = async (req, res) => {
         const { nameStartsWith, age } = req.query;
 
         const users = await userModel.find({
-            firstName: { $regex: `^${nameStartsWith}`, $options: 'i' },
+            firstName: { $regex: `${nameStartsWith}$`, $options: 'i' },
             age: { $lt: age },
         });
         res.json({ users });
@@ -102,7 +107,7 @@ export const searchUser = async (req, res) => {
 export const ageBetween = async (req, res) => {
     try {
 
-        const { minAge, maxAge } = req.query;
+        const { minAge, maxAge } = req.params;
         const users = await userModel.find({
             age: { $gte: minAge, $lte: maxAge },
         });

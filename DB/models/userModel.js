@@ -29,14 +29,16 @@ const userSchema = new mongoose.Schema({
     gander: {
         type: String,
         required: true,
+        default: 'male',
         enum: ['male', 'female']
     },
     phone: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     posts: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Types.ObjectId,
         ref: 'post',
     }],
 }, {

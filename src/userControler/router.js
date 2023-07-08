@@ -17,7 +17,7 @@ router.patch('/update/:_id', user.updateUser)
 
 router.delete('/delete/:_id', user.deleteUser)
 
-router.get('/age-between', user.ageBetween)
+router.get('/age-between/:maxAge/:minAge', user.ageBetween)
 
 router.get('/getAllUsers', user.getAllUsers)
 
